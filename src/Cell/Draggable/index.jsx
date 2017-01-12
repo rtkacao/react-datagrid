@@ -4,6 +4,34 @@ var React  = require('react')
 var assign = require('object-assign')
 var normalize = require('react-style-normalizer')
 
+/*******************
+Inject react-dnd
+********************/
+var DragSource = require('react-dnd').DragSource;
+const ItemTypes = {
+  CELL: 'cell',
+}
+
+var headerDraggable = false;
+
+/*******************/
+
+/*****************************/
+var cellSource = {
+  beginDrag: function(props){
+    return {
+      text: props.text
+    };
+  }
+}
+
+function collect(connect, monitor){
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  }
+}
+/*****************************/
 
 var TEXT_ALIGN_2_JUSTIFY = {
     right : 'flex-end',
@@ -22,9 +50,9 @@ function copyProps(target, source, list){
 
 var PropTypes = React.PropTypes
 
-var Cell = React.createClass({
+var DraggableHeaderCell = React.createClass({
 
-    displayName: 'ReactDataGrid.Cell',
+    displayName: 'ReactDataGrid.DraggableHeaderCell',
 
     propTypes: {
         className     : PropTypes.string,
@@ -44,6 +72,9 @@ var Cell = React.createClass({
         text       : PropTypes.any,
         rowIndex   : PropTypes.number,
 
+        isDragging: PropTypes.bool.isRequired,
+        connectDragSource: PropTypes.func.isRequired,
+        headerDraggable: PropTypes.bool
     },
 
     getDefaultProps: function(){
@@ -66,7 +97,7 @@ var Cell = React.createClass({
 
         var className = props.className || ''
 
-        className += ' ' + Cell.className
+        className += ' ' + DraggableHeaderCell.className
 
         if (columns){
             if (!index && props.firstClassName){
@@ -139,18 +170,25 @@ var Cell = React.createClass({
 
         delete renderProps.data
 
-
-        return (
-          <div {...renderProps}>
-              {content}
-              {props.children}
-          </div>
-        )
-
+        if(props.header && props.headerDraggable){
+          return props.connectDragSource(
+              <div {...renderProps}>
+                  {content}
+                  {props.children}
+              </div>
+          )
+        }else{
+          return (
+            <div {...renderProps}>
+                {content}
+                {props.children}
+            </div>
+          )
+        }
 
     }
 })
 
-Cell.className = 'z-cell'
+DraggableHeaderCell.className = 'z-cell'
 
-module.exports = Cell
+module.exports = DragSource(ItemTypes.CELL, cellSource, collect)(DraggableHeaderCell)

@@ -85,7 +85,7 @@ function findColumn(columns, column){
     }
 }
 
-module.exports = DragDropContext(HTML5Backend)(React.createClass({
+module.exports = (React.createClass({
 
     displayName: 'ReactDataGrid',
 
@@ -101,6 +101,8 @@ module.exports = DragDropContext(HTML5Backend)(React.createClass({
         //specify false if you don't want any column to be resizable
         resizableColumns : React.PropTypes.bool,
         filterable: React.PropTypes.bool,
+
+        headerDraggable: React.PropTypes.bool,
 
         //specify false if you don't want column menus to be displayed
         withColumnMenu   : React.PropTypes.bool,
@@ -365,6 +367,7 @@ module.exports = DragDropContext(HTML5Backend)(React.createClass({
             filterable: props.filterable,
             withColumnMenu   : props.withColumnMenu,
             sortable         : props.sortable,
+            headerDraggable        : props.headerDraggable,
 
             onDropColumn     : this.onDropColumn,
             onSortChange     : props.onSortChange,

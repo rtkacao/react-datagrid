@@ -9,6 +9,7 @@ var asArray = require('../utils/asArray')
 var findIndexBy = require('../utils/findIndexBy')
 var findIndexByName = require('../utils/findIndexByName')
 var Cell    = require('../Cell')
+var DraggableHeaderCell = require('../Cell/Draggable')
 var setupColumnDrag   = require('./setupColumnDrag')
 var setupColumnResize = require('./setupColumnResize')
 
@@ -232,26 +233,44 @@ module.exports = React.createClass({
         events.onMouseDown = this.handleMouseDown.bind(this, column)
         events.onMouseUp = this.handleMouseUp.bind(this, column)
 
-        return (
-            <Cell
-                key={column.name}
-                contentPadding={props.cellPadding}
-                columns={props.columns || []}
-                index={index}
-                column={props.columns[index]}
-                className={className}
-                style={style}
-                text={text}
-                header={true}
-                onMouseOut={this.handleMouseOut.bind(this, column)}
-                onMouseOver={this.handleMouseOver.bind(this, column)}
-                {...events}
-            >
-                {filter}
-                {menu}
-                {resizer}
-            </Cell>
-        )
+        var cellProps = {events,
+          key:column.name,
+          contentPadding:props.cellPadding,
+          columns:props.columns || [],
+          index:index,
+          column:props.columns[index],
+          className:className,
+          style:style,
+          text:text,
+          header:true,
+          onMouseOut:this.handleMouseOut.bind(this, column),
+          onMouseOver:this.handleMouseOver.bind(this, column),
+          headerDraggable:props.headerDraggable,
+
+        }
+        if(props.headerDraggable){
+          return (
+              <DraggableHeaderCell
+                  {...cellProps}
+                  headerDraggable={true}
+              >
+                  {filter}
+                  {menu}
+                  {resizer}
+              </DraggableHeaderCell>
+          )
+        }else{
+          return (
+              <Cell
+                  {...cellProps}
+              >
+                  {filter}
+                  {menu}
+                  {resizer}
+              </Cell>
+          )
+        }
+
     },
 
     toggleSort: function(column){

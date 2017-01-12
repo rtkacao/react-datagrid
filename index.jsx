@@ -82,6 +82,7 @@ class App extends React.Component {
             columns={columns}
             style={{height: 400}}
             onColumnResize={this.onColumnResize}
+            
         />
     }
 
