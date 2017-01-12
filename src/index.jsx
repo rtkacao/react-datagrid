@@ -30,6 +30,12 @@ var renderMenu     = require('./render/renderMenu')
 
 var preventDefault = require('./utils/preventDefault')
 
+
+/****************************/
+import {DragDropContext} from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+/****************************/
+
 var isArray = Array.isArray
 
 var SIZING_ID = '___SIZING___'
@@ -79,7 +85,7 @@ function findColumn(columns, column){
     }
 }
 
-module.exports = React.createClass({
+module.exports = DragDropContext(HTML5Backend)(React.createClass({
 
     displayName: 'ReactDataGrid',
 
@@ -1165,3 +1171,4 @@ module.exports = React.createClass({
         onColumnResize(firstCol, firstSize, secondCol, secondSize)
     }
 })
+)

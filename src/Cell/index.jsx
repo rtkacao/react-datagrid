@@ -4,6 +4,32 @@ var React  = require('react')
 var assign = require('object-assign')
 var normalize = require('react-style-normalizer')
 
+/*******************
+Inject react-dnd
+********************/
+var DragSource = require('react-dnd').DragSource;
+const ItemTypes = {
+  CELL: 'cell',
+}
+/*******************/
+
+/*****************************/
+var cellSource = {
+  beginDrag: function(props){
+    return {
+      text: props.text
+    };
+  }
+}
+
+function collect(connect, monitor){
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  }
+}
+/*****************************/
+
 var TEXT_ALIGN_2_JUSTIFY = {
     right : 'flex-end',
     center: 'center'
@@ -41,7 +67,10 @@ var Cell = React.createClass({
 
         style      : PropTypes.object,
         text       : PropTypes.any,
-        rowIndex   : PropTypes.number
+        rowIndex   : PropTypes.number,
+
+        isDragging: PropTypes.bool.isRequired,
+        connectDragSource: PropTypes.func.isRequired
     },
 
     getDefaultProps: function(){
@@ -137,7 +166,7 @@ var Cell = React.createClass({
 
         delete renderProps.data
 
-        return (
+        return props.connectDragSource(
             <div {...renderProps}>
                 {content}
                 {props.children}
@@ -148,4 +177,4 @@ var Cell = React.createClass({
 
 Cell.className = 'z-cell'
 
-module.exports = Cell
+module.exports = DragSource(ItemTypes.CELL, cellSource, collect)(Cell)

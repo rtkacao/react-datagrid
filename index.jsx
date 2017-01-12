@@ -90,6 +90,15 @@ class App extends React.Component {
         data = sort(data)
         this.setState({})
     }
+/*
+    handleColumnOrderChange(index, dropIndex){
+  		var col = columns[index]
+  		columns.splice(index, 1) //delete from index, 1 item
+  		columns.splice(dropIndex, 0, col)
+  		this.setState({})
+  	}
+*/
+
 }
 
 ReactDOM.render((

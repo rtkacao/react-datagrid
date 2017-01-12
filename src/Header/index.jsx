@@ -12,7 +12,10 @@ var Cell    = require('../Cell')
 var setupColumnDrag   = require('./setupColumnDrag')
 var setupColumnResize = require('./setupColumnResize')
 
+
+
 var normalize   = require('react-style-normalizer')
+
 
 function emptyFn(){}
 
