@@ -74,17 +74,23 @@ module.exports = React.createClass({
         var dropIndex = state.dropIndex
 
         if (dropIndex != null){
+            if(dropIndex === -1){
+                // this means that the action was not reordering columns,
+                // but instead dragging a column vertically (to the panel)
+              this.props.onDropColumnVertically(dragIndex);
+            }else{
+              //since we need the indexes in the array of all columns
+              //not only in the array of the visible columns
+              //we need to search them and make this transform
+              var dragColumn = props.columns[dragIndex]
+              var dropColumn = props.columns[dropIndex]
 
-            //since we need the indexes in the array of all columns
-            //not only in the array of the visible columns
-            //we need to search them and make this transform
-            var dragColumn = props.columns[dragIndex]
-            var dropColumn = props.columns[dropIndex]
+              dragIndex = findIndexByName(props.allColumns, dragColumn.name)
+              dropIndex = findIndexByName(props.allColumns, dropColumn.name)
 
-            dragIndex = findIndexByName(props.allColumns, dragColumn.name)
-            dropIndex = findIndexByName(props.allColumns, dropColumn.name)
+              this.props.onDropColumn(dragIndex, dropIndex)
+            }
 
-            this.props.onDropColumn(dragIndex, dropIndex)
         }
 
         this.setState(getDropState())
@@ -241,7 +247,6 @@ module.exports = React.createClass({
                 style={style}
                 text={text}
                 header={true}
-                draggable={true}
                 reorderColumns={props.reorderColumns}
                 onMouseOut={this.handleMouseOut.bind(this, column)}
                 onMouseOver={this.handleMouseOver.bind(this, column)}

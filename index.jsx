@@ -89,6 +89,7 @@ class App extends React.Component {
               style={{height: 400}}
               onColumnResize={this.onColumnResize}
               onColumnOrderChange={this.handleColumnOrderChange}
+              onDropColumn={this.handleDropColumn}
           />
       </div>)
     }
@@ -104,6 +105,10 @@ class App extends React.Component {
       columns.splice(index, 1) //delete from index, 1 item
       columns.splice(dropIndex, 0, col)
       this.setState({})
+    }
+
+    handleDropColumn(index){
+      console.log('drop column: ', columns[index]);
     }
 }
 

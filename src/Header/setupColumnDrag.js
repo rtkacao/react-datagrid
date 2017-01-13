@@ -69,6 +69,7 @@ module.exports = function(header, props, column, event){
                 dragging  : true
             })
 
+
             config.columnData = columnData
 
         },
@@ -88,6 +89,7 @@ module.exports = function(header, props, column, event){
                 verticalDrag: false
             }
 
+
             var shift
             var shiftSize
             var newLeft   = shiftRegion.left + diffLeft
@@ -101,10 +103,11 @@ module.exports = function(header, props, column, event){
               newLeft = shiftRegion.left;
               newRight = newLeft + shiftRegion.width
               state.verticalDrag = true
+              // set drop index to -1 to indicate dragging and dropping a column vertically
+              state.dropIndex = -1
             }
             var newBottom    = shiftRegion.height + newTop
 
-            console.log('newBottom: ', newBottom)
             var shiftZone = { left: newLeft, right: newRight, top: newTop, bottom: newBottom}
 
             config.columnData.forEach(function(columnData, index, arr){
