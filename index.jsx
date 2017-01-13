@@ -74,17 +74,23 @@ class App extends React.Component {
     }
 
     render() {
-        return <DataGrid
-            ref="dataGrid"
-            idProperty='id'
-            dataSource={data}
-            sortInfo={SORT_INFO}
-            onSortChange={this.handleSortChange}
-            columns={columns}
-            style={{height: 400}}
-            onColumnResize={this.onColumnResize}
-            onColumnOrderChange={this.handleColumnOrderChange}
-        />
+        return(
+      <div>
+        <div style={{height: 500}}>
+          future drop panel
+        </div>
+          <DataGrid
+              ref="dataGrid"
+              idProperty='id'
+              dataSource={data}
+              sortInfo={SORT_INFO}
+              onSortChange={this.handleSortChange}
+              columns={columns}
+              style={{height: 400}}
+              onColumnResize={this.onColumnResize}
+              onColumnOrderChange={this.handleColumnOrderChange}
+          />
+      </div>)
     }
 
     handleSortChange(sortInfo) {

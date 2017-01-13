@@ -4,7 +4,7 @@ var Region     = require('region')
 var DragHelper = require('drag-helper')
 var findDOMNode = require('react-dom').findDOMNode
 
-const VERTICAL_DRAG_THRESHOLD = 75
+const VERTICAL_DRAG_THRESHOLD = 100
 
 function range(start, end){
     var res = []
@@ -81,10 +81,11 @@ module.exports = function(header, props, column, event){
                 dragColumnIndex  : dragColumnIndex,
                 dragColumn  : dragColumn,
                 dragLeft    : diffLeft,
-                dragTop     : diffTop,
+                dragTop     : (diffTop < -VERTICAL_DRAG_THRESHOLD ? diffTop: 0),
                 dropIndex   : null,
                 shiftIndexes: null,
-                shiftSize   : null
+                shiftSize   : null,
+                verticalDrag: false
             }
 
             var shift
@@ -94,12 +95,12 @@ module.exports = function(header, props, column, event){
             // "throttle" vertical drag: only has effects when exceed certain range (VERTICAL_DRAG_THRESHOLD).
             // and if so, disable horizontal shifts
             var newTop    = shiftRegion.top
-            if(Math.abs(diffTop) > VERTICAL_DRAG_THRESHOLD){
+            if(diffTop < -VERTICAL_DRAG_THRESHOLD){
               newTop    = shiftRegion.top + diffTop
               // disable/reset horizontal shifts
               newLeft = shiftRegion.left;
               newRight = newLeft + shiftRegion.width
-              state.dragLeft = 0
+              state.verticalDrag = true
             }
             var newBottom    = shiftRegion.height + newTop
 

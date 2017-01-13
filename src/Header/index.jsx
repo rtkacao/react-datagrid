@@ -177,8 +177,9 @@ module.exports = React.createClass({
 
         if (state.dragColumn === column){
             className += ' z-drag z-over'
-            style.zIndex = 1
+            style.zIndex = 999
             style.left = state.dragLeft || 0
+            style.top = state.dragTop || 0
         }
 
         var filterIcon = props.filterIcon || <svg version="1.1" style={{transform: 'translate3d(0,0,0)', height:'100%', width: '100%', padding: '0px 2px' }} viewBox="0 0 3 4">
@@ -240,6 +241,8 @@ module.exports = React.createClass({
                 style={style}
                 text={text}
                 header={true}
+                draggable={true}
+                reorderColumns={props.reorderColumns}
                 onMouseOut={this.handleMouseOut.bind(this, column)}
                 onMouseOver={this.handleMouseOver.bind(this, column)}
                 {...events}
