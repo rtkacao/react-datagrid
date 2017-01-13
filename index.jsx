@@ -82,6 +82,7 @@ class App extends React.Component {
             columns={columns}
             style={{height: 400}}
             onColumnResize={this.onColumnResize}
+            onColumnOrderChange={this.handleColumnOrderChange}
         />
     }
 
@@ -89,6 +90,13 @@ class App extends React.Component {
         SORT_INFO = sortInfo
         data = sort(data)
         this.setState({})
+    }
+
+    handleColumnOrderChange(index, dropIndex){
+      var col = columns[index]
+      columns.splice(index, 1) //delete from index, 1 item
+      columns.splice(dropIndex, 0, col)
+      this.setState({})
     }
 }
 
