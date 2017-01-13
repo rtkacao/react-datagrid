@@ -74,17 +74,23 @@ module.exports = React.createClass({
         var dropIndex = state.dropIndex
 
         if (dropIndex != null){
+            if(dropIndex === -1){
+                // this means that the action was not reordering columns,
+                // but instead dragging a column vertically (to the panel)
+              this.props.onDropColumnVertically(dragIndex);
+            }else{
+              //since we need the indexes in the array of all columns
+              //not only in the array of the visible columns
+              //we need to search them and make this transform
+              var dragColumn = props.columns[dragIndex]
+              var dropColumn = props.columns[dropIndex]
 
-            //since we need the indexes in the array of all columns
-            //not only in the array of the visible columns
-            //we need to search them and make this transform
-            var dragColumn = props.columns[dragIndex]
-            var dropColumn = props.columns[dropIndex]
+              dragIndex = findIndexByName(props.allColumns, dragColumn.name)
+              dropIndex = findIndexByName(props.allColumns, dropColumn.name)
 
-            dragIndex = findIndexByName(props.allColumns, dragColumn.name)
-            dropIndex = findIndexByName(props.allColumns, dropColumn.name)
+              this.props.onDropColumn(dragIndex, dropIndex)
+            }
 
-            this.props.onDropColumn(dragIndex, dropIndex)
         }
 
         this.setState(getDropState())
@@ -177,8 +183,9 @@ module.exports = React.createClass({
 
         if (state.dragColumn === column){
             className += ' z-drag z-over'
-            style.zIndex = 1
+            style.zIndex = 999
             style.left = state.dragLeft || 0
+            style.top = state.dragTop || 0
         }
 
         var filterIcon = props.filterIcon || <svg version="1.1" style={{transform: 'translate3d(0,0,0)', height:'100%', width: '100%', padding: '0px 2px' }} viewBox="0 0 3 4">
@@ -240,6 +247,7 @@ module.exports = React.createClass({
                 style={style}
                 text={text}
                 header={true}
+                reorderColumns={props.reorderColumns}
                 onMouseOut={this.handleMouseOut.bind(this, column)}
                 onMouseOver={this.handleMouseOver.bind(this, column)}
                 {...events}

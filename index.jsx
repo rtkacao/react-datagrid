@@ -64,6 +64,7 @@ class App extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleSortChange = this.handleSortChange.bind(this);
+        this.handleColumnOrderChange = this.handleColumnOrderChange.bind(this);
         this.onColumnResize = this.onColumnResize.bind(this);
     }
 
@@ -73,17 +74,24 @@ class App extends React.Component {
     }
 
     render() {
-        return <DataGrid
-            ref="dataGrid"
-            idProperty='id'
-            dataSource={data}
-            sortInfo={SORT_INFO}
-            onSortChange={this.handleSortChange}
-            columns={columns}
-            style={{height: 400}}
-            onColumnResize={this.onColumnResize}
-            onColumnOrderChange={this.handleColumnOrderChange}
-        />
+        return(
+      <div>
+        <div style={{height: 500}}>
+          future drop panel
+        </div>
+          <DataGrid
+              ref="dataGrid"
+              idProperty='id'
+              dataSource={data}
+              sortInfo={SORT_INFO}
+              onSortChange={this.handleSortChange}
+              columns={columns}
+              style={{height: 400}}
+              onColumnResize={this.onColumnResize}
+              onColumnOrderChange={this.handleColumnOrderChange}
+              onDropColumn={this.handleDropColumn}
+          />
+      </div>)
     }
 
     handleSortChange(sortInfo) {
@@ -97,6 +105,10 @@ class App extends React.Component {
       columns.splice(index, 1) //delete from index, 1 item
       columns.splice(dropIndex, 0, col)
       this.setState({})
+    }
+
+    handleDropColumn(index){
+      console.log('drop column: ', columns[index]);
     }
 }
 

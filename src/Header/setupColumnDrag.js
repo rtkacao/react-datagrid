@@ -4,6 +4,8 @@ var Region     = require('region')
 var DragHelper = require('drag-helper')
 var findDOMNode = require('react-dom').findDOMNode
 
+const VERTICAL_DRAG_THRESHOLD = 100
+
 function range(start, end){
     var res = []
 
@@ -41,7 +43,7 @@ module.exports = function(header, props, column, event){
 
     DragHelper(event, {
 
-        constrainTo: headerRegion.expand({ top: true, bottom: true}),
+        //constrainTo: headerRegion.expand({ top: true, bottom: true}),
 
         onDragStart: function(event, config){
 
@@ -67,26 +69,46 @@ module.exports = function(header, props, column, event){
                 dragging  : true
             })
 
+
             config.columnData = columnData
 
         },
         onDrag: function(event, config){
-            var diff = config.diff.left
-            var directionSign = diff < 0? -1: 1
+            var diffLeft = config.diff.left
+            var diffTop = config.diff.top
+            var directionHSign = diffLeft < 0? -1: 1
+            var directionVSign = diffTop < 0? -1: 1
             var state = {
                 dragColumnIndex  : dragColumnIndex,
                 dragColumn  : dragColumn,
-                dragLeft    : diff,
+                dragLeft    : diffLeft,
+                dragTop     : (diffTop < -VERTICAL_DRAG_THRESHOLD ? diffTop: 0),
                 dropIndex   : null,
                 shiftIndexes: null,
-                shiftSize   : null
+                shiftSize   : null,
+                verticalDrag: false
             }
+
 
             var shift
             var shiftSize
-            var newLeft   = shiftRegion.left + diff
+            var newLeft   = shiftRegion.left + diffLeft
             var newRight  = newLeft + shiftRegion.width
-            var shiftZone = { left: newLeft, right: newRight}
+            // "throttle" vertical drag: only has effects when exceed certain range (VERTICAL_DRAG_THRESHOLD).
+            // and if so, disable horizontal shifts
+            var newTop    = shiftRegion.top
+            if(diffTop < -VERTICAL_DRAG_THRESHOLD){
+              newTop    = shiftRegion.top + diffTop
+              // disable/reset horizontal shifts
+              newLeft = shiftRegion.left;
+              newRight = newLeft + shiftRegion.width
+              state.verticalDrag = true
+              // set drop index to -1 to indicate dragging and dropping a column vertically
+              state.dropIndex = -1
+            }
+            var newBottom    = shiftRegion.height + newTop
+
+            var shiftZone = { left: newLeft, right: newRight, top: newTop, bottom: newBottom}
 
             config.columnData.forEach(function(columnData, index, arr){
 
@@ -99,7 +121,7 @@ module.exports = function(header, props, column, event){
 
                 var itLeft  = itRegion.left
                 var itRight = itRegion.right
-                var itZone  = directionSign == -1?
+                var itZone  = directionHSign == -1?
                             { left: itLeft, right: itLeft + itRegion.width }:
                             { left: itRight - itRegion.width, right: itRight }
 
@@ -119,9 +141,9 @@ module.exports = function(header, props, column, event){
                 }
 
                 if (shift) {
-                    shiftSize = -directionSign * shiftRegion.width
+                    shiftSize = -directionHSign * shiftRegion.width
                     state.dropIndex = index
-                    state.shiftIndexes = buildIndexes(directionSign, index, dragColumnIndex)
+                    state.shiftIndexes = buildIndexes(directionHSign, index, dragColumnIndex)
                     state.shiftSize = shiftSize
                 }
             })

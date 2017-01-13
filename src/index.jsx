@@ -270,7 +270,12 @@ module.exports = React.createClass({
     },
 
     onDropColumn: function(index, dropIndex){
-        ;(this.props.onColumnOrderChange || emptyFn)(index, dropIndex)
+        (this.props.onColumnOrderChange || emptyFn)(index, dropIndex)
+
+    },
+
+    onDropColumnVertically: function(index){
+      (this.props.onDropColumn || emptyFn)(index)
     },
 
     toggleColumn: function(props, column){
@@ -361,6 +366,7 @@ module.exports = React.createClass({
             sortable         : props.sortable,
 
             onDropColumn     : this.onDropColumn,
+            onDropColumnVertically: this.onDropColumnVertically,
             onSortChange     : props.onSortChange,
             onColumnResizeDragStart: this.onColumnResizeDragStart,
             onColumnResizeDrag: this.onColumnResizeDrag,
