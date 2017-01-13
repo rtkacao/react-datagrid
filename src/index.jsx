@@ -30,6 +30,12 @@ var renderMenu     = require('./render/renderMenu')
 
 var preventDefault = require('./utils/preventDefault')
 
+
+/****************************/
+import {DragDropContext} from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+/****************************/
+
 var isArray = Array.isArray
 
 var SIZING_ID = '___SIZING___'
@@ -79,7 +85,7 @@ function findColumn(columns, column){
     }
 }
 
-module.exports = React.createClass({
+module.exports = (React.createClass({
 
     displayName: 'ReactDataGrid',
 
@@ -95,6 +101,8 @@ module.exports = React.createClass({
         //specify false if you don't want any column to be resizable
         resizableColumns : React.PropTypes.bool,
         filterable: React.PropTypes.bool,
+
+        headerDraggable: React.PropTypes.bool,
 
         //specify false if you don't want column menus to be displayed
         withColumnMenu   : React.PropTypes.bool,
@@ -364,6 +372,7 @@ module.exports = React.createClass({
             filterable: props.filterable,
             withColumnMenu   : props.withColumnMenu,
             sortable         : props.sortable,
+            headerDraggable        : props.headerDraggable,
 
             onDropColumn     : this.onDropColumn,
             onDropColumnVertically: this.onDropColumnVertically,
@@ -1171,3 +1180,4 @@ module.exports = React.createClass({
         onColumnResize(firstCol, firstSize, secondCol, secondSize)
     }
 })
+)
